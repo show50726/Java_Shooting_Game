@@ -87,7 +87,8 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         time.start();
 
         allEnemy.add(new EnemyA((int)playerPosX, 10));
-	    
+        allEnemy.add(new EnemyA((int)playerPosX+20, 10));
+        allEnemy.add(new EnemyA((int)playerPosX-20, 10));
 	}
 
 	
@@ -109,8 +110,9 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			}
         	for (Bullet j : myBullets) {
         		if(i.testHit(j.x, j.y)) {
+        			i.hp -= j.power;
         			j.remove = true;
-        			i.remove = true;
+        			//i.remove = true;
         		}
         	}
         }

@@ -18,6 +18,8 @@ abstract class Enemy {
 		return false;
 	}
 	
+	public void shoot () {}
+	
 	public boolean testHit (double tx, double ty) {
 		return false;
 	}

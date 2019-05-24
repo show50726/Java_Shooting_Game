@@ -17,7 +17,7 @@ class EnemyA extends Enemy {
 		this.remove = false;
 		this.x = x;
 		this.y = y;
-		this.hp = 5;
+		this.hp = 3;
 		this.speed = 1;
 		try {
             image = ImageIO.read(this.getClass().getResource("/enemyA.png"));
@@ -31,7 +31,7 @@ class EnemyA extends Enemy {
 	}
 	
 	public boolean canRemove () {
-		if(x<=0||x>=PlayerController.SCREEN_WIDTH||remove) {
+		if(x<=0||x>=PlayerController.SCREEN_WIDTH||remove||this.hp<=0) {
 			return true;
 		}
 		if(y<=0||y>=PlayerController.SCREEN_HEIGHT) {
@@ -61,6 +61,8 @@ class EnemyA extends Enemy {
 	public boolean testHit (double tx, double ty) {
 		return new Ellipse2D.Double(x-imgw/2, y-imgh/2, imgh, imgw).contains(tx, ty);
 	}
+	
+	
 
 	
 }

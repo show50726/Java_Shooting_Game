@@ -8,7 +8,7 @@ class NormalBullet extends Bullet {
 	int radius = 10;
 	public NormalBullet(float nx, float ny) {
 		bullet_color = Color.RED;
-		power = 1;
+		power = 2;
 		x = nx;
 		y = ny;
 	}
@@ -35,7 +35,5 @@ class NormalBullet extends Bullet {
 		// TODO Auto-generated method stub
 		y-=speed;
 	}
-
-
 
 }
