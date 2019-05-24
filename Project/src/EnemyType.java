@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.List;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.util.Random;
@@ -13,6 +14,7 @@ import javax.swing.text.View;
 class EnemyA extends Enemy {
 	
 	EnemyA(int x, int y){
+		this.remove = false;
 		this.x = x;
 		this.y = y;
 		this.hp = 5;
@@ -23,10 +25,13 @@ class EnemyA extends Enemy {
         } catch (IOException ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         }
+		
+		this.imgh = (int)image.getWidth()/10;
+		this.imgw = (int)image.getHeight()/10;
 	}
 	
 	public boolean canRemove () {
-		if(x<=0||x>=PlayerController.SCREEN_WIDTH) {
+		if(x<=0||x>=PlayerController.SCREEN_WIDTH||remove) {
 			return true;
 		}
 		if(y<=0||y>=PlayerController.SCREEN_HEIGHT) {
@@ -44,13 +49,17 @@ class EnemyA extends Enemy {
 			x -= range;
 		else x += range;
 		y = y+speed;
-		g.drawImage(image, x, y, (int)image.getWidth()/10, (int)image.getHeight()/10, null);
+		g.drawImage(image, x, y, imgh, imgw, null);
 		
 		hit = false;
 	}
 	
 	public void update (List fb, List eb, List bo, int px, int py) {
 		
+	}
+	
+	public boolean testHit (double tx, double ty) {
+		return new Ellipse2D.Double(x-imgw/2, y-imgh/2, imgh, imgw).contains(tx, ty);
 	}
 
 	

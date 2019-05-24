@@ -9,6 +9,8 @@ abstract class Enemy {
 	public int x, y;
 	public Color enmyColor;
 	boolean hit = false;
+	public int imgh, imgw;
+	public boolean remove = true;
 	
 	BufferedImage image;
 	

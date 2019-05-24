@@ -11,6 +11,7 @@ import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -46,8 +47,8 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 
 	
 	List<Bullet> myBullets	= new LinkedList<Bullet>();
+	List<Enemy> allEnemy = new LinkedList<Enemy>();
 	
-	public EnemyA test;
 	
 	public PlayerController() {
 
@@ -84,20 +85,35 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         
         
         time.start();
-        test = new EnemyA((int)playerPosX, 0);
+
+        allEnemy.add(new EnemyA((int)playerPosX, 10));
 	    
 	}
 
 	
 	
 	public void update(Graphics g) { 
+		System.out.println("update");
         this.paint(g); 
     } 
  
     public void paint(Graphics g) { 
         super.paint(g);
         
-        test.draw(g);
+        for(Enemy i: allEnemy) {
+        	try {
+				i.draw(g);
+			}
+			catch (Exception e) {
+				break;
+			}
+        	for (Bullet j : myBullets) {
+        		if(i.testHit(j.x, j.y)) {
+        			j.remove = true;
+        			i.remove = true;
+        		}
+        	}
+        }
         
         for (Bullet j : myBullets) {
 			try {
@@ -107,6 +123,14 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 				break;
 			}
 		}
+        
+        for(Enemy i: allEnemy) {
+        	if(i.canRemove()) allEnemy.remove(i);
+        }
+        
+        for (Bullet j : myBullets) {
+        	if(j.canRemove()) myBullets.remove(j);
+        }
         
         drawPlayer(g);
         
