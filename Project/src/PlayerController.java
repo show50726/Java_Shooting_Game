@@ -33,8 +33,8 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	float playerSpeedY = 15;
 	float playerSpeedX = 15;
 	
-	final int SCREEN_WIDTH = 540;
-	final int SCREEN_HEIGHT = 800;
+	static int SCREEN_WIDTH = 540;
+	static int SCREEN_HEIGHT = 800;
 	
 	Timer time = new Timer(15, this);
 	
@@ -47,7 +47,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	
 	List<Bullet> myBullets	= new LinkedList<Bullet>();
 	
-	
+	public EnemyA test;
 	
 	public PlayerController() {
 
@@ -84,7 +84,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         
         
         time.start();
-        
+        test = new EnemyA((int)playerPosX, 0);
 	    
 	}
 
@@ -96,6 +96,8 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
  
     public void paint(Graphics g) { 
         super.paint(g);
+        
+        test.draw(g);
         
         for (Bullet j : myBullets) {
 			try {
