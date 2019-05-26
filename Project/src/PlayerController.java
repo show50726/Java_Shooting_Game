@@ -12,7 +12,9 @@ import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -48,7 +50,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	int Score = 0;
 	
 	int maxEnemy = 6, enemyCnt = 0, enemyType = 2;
-	boolean canMove = true;
+	boolean canMove = true, explosionAnim = false;
 	
 	Timer time = new Timer(15, this);
 	
@@ -58,7 +60,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	JLabel wordLabel = null, bgLabel = null;
 	JPanel imagePanel = null;
 
-	
+	private static List<BufferedImage> bg = new ArrayList<BufferedImage>();
 	List<Bullet> myBullets	= new LinkedList<Bullet>();
 	List<Bullet> enmyBullets = new LinkedList<Bullet>();
 	List<Enemy> allEnemy = new LinkedList<Enemy>();
@@ -75,6 +77,16 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         } catch (IOException ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         }
+		
+		Integer max = 12;
+	    for (int i = 1; i <= max; i++) {
+	        try {
+	            bg.add(ImageIO.read(this.getClass().getResource("/explosion/"+i+".png")));
+	        }
+	        catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
 		
 		JFrame frame = new JFrame();
 		frame.setTitle("Test");
@@ -113,7 +125,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	}
 
 	private void spawnEnemy() {
-		System.out.println(enemyCnt);
+		//System.out.println(enemyCnt);
 		if(enemyCnt<maxEnemy) {
 			Random ran = new Random();
 			int type = ran.nextInt(enemyType);
@@ -227,7 +239,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	}
 
 
-
+    
 	private boolean checkDie() {
 		// TODO Auto-generated method stub
 		if(this.playerHP<=0) {
@@ -237,6 +249,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			left = false;
 			right = false;
 			toShoot = false;
+
 			return true;
 		}
 		return false;
@@ -248,9 +261,10 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		g.fillRect(400, 30, this.playerHP*5>=0?this.playerHP*5:0, 10);
 	}
 
-
+	int explosionCnt = 0;
 	int shootPeriod = 5, shootCnt = 0;
 	private void drawPlayer(Graphics g) {
+		
     	playerPosY = (playerPosY-(up?playerSpeedY:0)+(down?playerSpeedY:0));
     	if(playerPosY<=0) playerPosY = 1;
     	if(playerPosY>=730) playerPosY = 729;
@@ -258,7 +272,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     	playerPosX = (playerPosX-(left?playerSpeedX:0)+(right?playerSpeedX:0));
     	if(playerPosX<=0) playerPosX = 1;
     	if(playerPosX>=500) playerPosX = 499;
-    	System.out.printf("%f %f\n", playerPosX, playerPosY);
+    	//System.out.printf("%f %f\n", playerPosX, playerPosY);
     	
     	if(toShoot) {
     		if(shootCnt>=shootPeriod) {
@@ -275,6 +289,22 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     	}
     	
     	g.drawImage(image, (int)playerPosX, (int)playerPosY, (int)image.getWidth()/10, (int)image.getHeight()/10, this);
+    	
+    	if(checkDie()&&!explosionAnim) {
+    		System.out.print("explosion\n");
+    		float alpha = 1f;
+    		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+    		((Graphics2D) g).setComposite(ac);
+    		g.drawImage(bg.get(explosionCnt/2), (int)playerPosX, (int)playerPosY, (int)bg.get(explosionCnt/2).getWidth()/2, (int)bg.get(explosionCnt/2).getHeight()/2, this);
+    		explosionCnt++;
+    	}    
+    	
+    	if(explosionCnt==24)
+    		explosionAnim = true;
+		    
+    	
+    	
+    	
     	AffineTransform originalTransform = ((Graphics2D) g).getTransform();
     	
     	((Graphics2D) g).setTransform(originalTransform);
