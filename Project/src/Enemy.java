@@ -11,20 +11,21 @@ abstract class Enemy {
 	boolean hit = false;
 	public int imgh, imgw;
 	public boolean remove = true;
+	public int type;
 	
 	BufferedImage image;
 	
-	public boolean canRemove () {
-		return false;
-	}
+	abstract public boolean canRemove ();
 	
-	public void shoot () {}
+	abstract public boolean shoot ();
 	
-	public boolean testHit (double tx, double ty) {
-		return false;
-	}
+	abstract public boolean testHit (double tx, double ty);
 	
 	abstract public void draw (Graphics g);
 	
 	abstract public void update (List fb, List eb, List bo, int px, int py);
+	
+	public void setHP(int delta) {
+		hp-=delta;
+	}
 }

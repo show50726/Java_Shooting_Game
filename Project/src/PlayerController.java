@@ -9,9 +9,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -34,8 +36,12 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	float playerSpeedY = 15;
 	float playerSpeedX = 15;
 	
+	int playerHP = 20;
+	
 	static int SCREEN_WIDTH = 540;
 	static int SCREEN_HEIGHT = 800;
+	
+	int imgh, imgw;
 	
 	Timer time = new Timer(15, this);
 	
@@ -47,6 +53,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 
 	
 	List<Bullet> myBullets	= new LinkedList<Bullet>();
+	List<Bullet> enmyBullets = new LinkedList<Bullet>();
 	List<Enemy> allEnemy = new LinkedList<Enemy>();
 	
 	
@@ -55,7 +62,8 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		try {
 
             image = ImageIO.read(this.getClass().getResource("/fighter.png"));
-            
+            imgw = (int)image.getWidth()/10;
+            imgh = (int)image.getHeight()/10;
 
         } catch (IOException ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
@@ -87,8 +95,8 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         time.start();
 
         allEnemy.add(new EnemyA((int)playerPosX, 10));
-        allEnemy.add(new EnemyA((int)playerPosX+20, 10));
-        allEnemy.add(new EnemyA((int)playerPosX-20, 10));
+        allEnemy.add(new EnemyB((int)playerPosX+20, 10));
+        allEnemy.add(new EnemyA((int)playerPosX-50, 10));
 	}
 
 	
@@ -104,13 +112,20 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         for(Enemy i: allEnemy) {
         	try {
 				i.draw(g);
+				if(i.shoot()) {
+					if(i.type==0) {
+						enmyBullets.add(new EnemyABullet(i.x, i.y, -1));
+						enmyBullets.add(new EnemyABullet(i.x, i.y, 0));
+						enmyBullets.add(new EnemyABullet(i.x, i.y, 1));
+					}
+				}
 			}
 			catch (Exception e) {
 				break;
 			}
         	for (Bullet j : myBullets) {
         		if(i.testHit(j.x, j.y)) {
-        			i.hp -= j.power;
+        			i.setHP(j.power);
         			j.remove = true;
         			//i.remove = true;
         		}
@@ -126,19 +141,72 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			}
 		}
         
-        for(Enemy i: allEnemy) {
-        	if(i.canRemove()) allEnemy.remove(i);
+        for (Bullet j : enmyBullets) {
+			try {
+				if(!j.canRemove()) {
+					j.draw(g);
+					if(this.testHit(j.x, j.y)) {
+	        			this.setHP(j.power);
+	        			j.remove = true;
+	        		}
+				}
+			}
+			catch (Exception e) {
+				break;
+			}
+		}
+        
+        for(int j = allEnemy.size()-1; j >=0 ; j--) {
+        	if(allEnemy.get(j).canRemove()) {
+        		allEnemy.remove(j);
+        	}
         }
         
-        for (Bullet j : myBullets) {
-        	if(j.canRemove()) myBullets.remove(j);
+//        for(Enemy i: allEnemy) {
+//        	if(i.canRemove()) allEnemy.remove(i);
+//        }
+        
+//        for (Bullet j : myBullets) {
+//        	if(j.canRemove()) myBullets.remove(j);
+//        }
+        
+        for(int j = myBullets.size()-1; j >=0 ; j--) {
+        	if(myBullets.get(j).canRemove()) {
+        		myBullets.remove(j);
+        	}
         }
+        
+        for(int i = enmyBullets.size()-1; i >=0 ; i--) {
+        	if(enmyBullets.get(i).canRemove()) {
+        		enmyBullets.remove(i);
+        	}
+        }
+//        for (Bullet k : enmyBullets) {
+//        	if(k.canRemove()) enmyBullets.remove(k);
+//        }
         
         drawPlayer(g);
         
     }
 
-    private void drawPlayer(Graphics g) {
+    private void setHP(int delta) {
+		// TODO Auto-generated method stub
+		this.playerHP-=delta;
+		checkDie();
+	}
+
+
+
+	private void checkDie() {
+		// TODO Auto-generated method stub
+		if(this.playerHP<=0) {
+			//player dies
+		}
+	}
+
+
+
+	private void drawPlayer(Graphics g) {
     	
     	g.drawImage(image, (int)playerPosX, (int)playerPosY, (int)image.getWidth()/10, (int)image.getHeight()/10, this);
     	AffineTransform originalTransform = ((Graphics2D) g).getTransform();
@@ -175,6 +243,10 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	
 	void Shoot() {
 		myBullets.add(new NormalBullet(playerPosX+15, playerPosY));
+	}
+	
+	public boolean testHit(double tx, double ty) {
+		return new Ellipse2D.Double(playerPosX-imgw/2, playerPosY-imgh/2, imgh, imgw).contains(tx, ty);
 	}
   
   	private void checkPosRange() {
