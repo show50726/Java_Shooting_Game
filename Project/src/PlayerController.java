@@ -33,8 +33,8 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	float playerPosX = 270;
 	float playerPosY = 700;
 	
-	float playerSpeedY = 15;
-	float playerSpeedX = 15;
+	float playerSpeedY = 5;
+	float playerSpeedX = 5;
 	
 	int playerHP = 20;
 	
@@ -205,8 +205,17 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	}
 
 
-
+	int shootPeriod = 5, shootCnt = 0;
 	private void drawPlayer(Graphics g) {
+    	playerPosY = (playerPosY-(up?playerSpeedY:0)+(down?playerSpeedY:0));
+    	playerPosX = (playerPosX-(left?playerSpeedX:0)+(right?playerSpeedX:0));
+    	if(toShoot) {
+    		if(shootCnt>=shootPeriod) {
+    			this.Shoot();
+    			shootCnt%=shootPeriod;
+    		}
+    		else shootCnt++;
+    	}
     	
     	g.drawImage(image, (int)playerPosX, (int)playerPosY, (int)image.getWidth()/10, (int)image.getHeight()/10, this);
     	AffineTransform originalTransform = ((Graphics2D) g).getTransform();
@@ -215,27 +224,29 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     	Toolkit.getDefaultToolkit().sync();
     	
     }
-  
+	
+	boolean up = false, down = false, left = false, right = false, toShoot = false;;
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		//System.out.println(e);
 		
 		// Move the player on the left
-		if( key == KeyEvent.VK_UP )
-			playerPosY-= playerSpeedY;
+		if( key == KeyEvent.VK_UP ) {
+			up = true;
+		}
 		
 		if( key == KeyEvent.VK_DOWN )
-			playerPosY += playerSpeedY;
+			down = true;
 
 		// Move the player on the right
 		if( key == KeyEvent.VK_LEFT )
-			playerPosX -= playerSpeedX;
+			left = true;
 		
 		if( key == KeyEvent.VK_RIGHT )
-			playerPosX += playerSpeedX;
+			right = true;
 		
 		if(key == KeyEvent.VK_SPACE)
-			Shoot();
+			toShoot = true;
 
 		//checkPosRange();
 		repaint();
@@ -262,8 +273,23 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+
+		int key = e.getKeyCode();
+		if( key == KeyEvent.VK_UP ) {
+			up = false;
+		}
+		if( key == KeyEvent.VK_DOWN )
+			down = false;
+
+		// Move the player on the right
+		if( key == KeyEvent.VK_LEFT )
+			left = false;
 		
+		if( key == KeyEvent.VK_RIGHT )
+			right = false;
+		
+		if(key == KeyEvent.VK_SPACE)
+			toShoot = false;
 	}
 
 	@Override
