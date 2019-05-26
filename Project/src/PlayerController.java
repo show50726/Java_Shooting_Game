@@ -1,3 +1,4 @@
+import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -17,6 +18,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,6 +45,11 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	
 	int imgh, imgw;
 	
+	int Score = 0;
+	
+	int maxEnemy = 6, enemyCnt = 0, enemyType = 2;
+	boolean canMove = true;
+	
 	Timer time = new Timer(15, this);
 	
 	BufferedImage image;
@@ -55,7 +62,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	List<Bullet> myBullets	= new LinkedList<Bullet>();
 	List<Bullet> enmyBullets = new LinkedList<Bullet>();
 	List<Enemy> allEnemy = new LinkedList<Enemy>();
-	
+	JLabel Scorelabel;
 	
 	public PlayerController() {
 
@@ -81,6 +88,12 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		frame.add(this);
         frame.addKeyListener(this);
         
+        //set score label
+        Scorelabel = new JLabel("Score: ", Score);
+        Scorelabel.setSize(50, 20);
+        Scorelabel.setLocation(400, 20);
+        //add(Scorelabel);
+        
 //        background = new ImageIcon(getClass().getResource("/bg2.jpg"));     
 //        bgLabel = new JLabel(background);     
 //        bgLabel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
@@ -94,12 +107,27 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         
         time.start();
 
-        allEnemy.add(new EnemyA((int)playerPosX, 10));
-        allEnemy.add(new EnemyB((int)playerPosX+20, 10));
-        allEnemy.add(new EnemyA((int)playerPosX-50, 10));
+//        allEnemy.add(new EnemyA((int)playerPosX, 10));
+//        allEnemy.add(new EnemyB((int)playerPosX+20, 10));
+//        allEnemy.add(new EnemyA((int)playerPosX-50, 10));
 	}
 
-	
+	private void spawnEnemy() {
+		System.out.println(enemyCnt);
+		if(enemyCnt<maxEnemy) {
+			Random ran = new Random();
+			int type = ran.nextInt(enemyType);
+			
+			int pos = ran.nextInt(500);
+			if(type==0) {
+				allEnemy.add(new EnemyA(pos, 10));
+			}
+			else if(type==1) {
+				allEnemy.add(new EnemyB(pos, 10));
+			}
+			enemyCnt++;
+		}
+	}
 	
 	public void update(Graphics g) { 
 		System.out.println("update");
@@ -107,8 +135,9 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     } 
  
     public void paint(Graphics g) { 
+    	this.spawnEnemy();
         super.paint(g);
-        
+
         for(Enemy i: allEnemy) {
         	try {
 				i.draw(g);
@@ -159,6 +188,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         for(int j = allEnemy.size()-1; j >=0 ; j--) {
         	if(allEnemy.get(j).canRemove()) {
         		allEnemy.remove(j);
+        		enemyCnt--;
         	}
         }
         
@@ -179,14 +209,15 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         for(int i = enmyBullets.size()-1; i >=0 ; i--) {
         	if(enmyBullets.get(i).canRemove()) {
         		enmyBullets.remove(i);
+        		
         	}
         }
 //        for (Bullet k : enmyBullets) {
 //        	if(k.canRemove()) enmyBullets.remove(k);
 //        }
         
+        drawHPBar(g);
         drawPlayer(g);
-        
     }
 
     private void setHP(int delta) {
@@ -197,11 +228,24 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 
 
 
-	private void checkDie() {
+	private boolean checkDie() {
 		// TODO Auto-generated method stub
 		if(this.playerHP<=0) {
-			//player dies
+			canMove = false;
+			up = false;
+			down = false;
+			left = false;
+			right = false;
+			toShoot = false;
+			return true;
 		}
+		return false;
+	}
+	
+	private void drawHPBar(Graphics g) {
+		g.setColor(Color.RED);
+		g.drawRect(400, 30, 100, 10);
+		g.fillRect(400, 30, this.playerHP*5>=0?this.playerHP*5:0, 10);
 	}
 
 
@@ -224,6 +268,12 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     		else shootCnt++;
     	}
     	
+    	if(checkDie()) {
+    		float alpha = 0f;
+    		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+    		((Graphics2D) g).setComposite(ac);
+    	}
+    	
     	g.drawImage(image, (int)playerPosX, (int)playerPosY, (int)image.getWidth()/10, (int)image.getHeight()/10, this);
     	AffineTransform originalTransform = ((Graphics2D) g).getTransform();
     	
@@ -237,24 +287,23 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		int key = e.getKeyCode();
 		//System.out.println(e);
 		
-		// Move the player on the left
-		if( key == KeyEvent.VK_UP ) {
-			up = true;
+		if(canMove) {
+			if( key == KeyEvent.VK_UP ) {
+				up = true;
+			}
+			
+			if( key == KeyEvent.VK_DOWN )
+				down = true;
+	
+			if( key == KeyEvent.VK_LEFT )
+				left = true;
+			
+			if( key == KeyEvent.VK_RIGHT )
+				right = true;
+			
+			if(key == KeyEvent.VK_SPACE)
+				toShoot = true;
 		}
-		
-		if( key == KeyEvent.VK_DOWN )
-			down = true;
-
-		// Move the player on the right
-		if( key == KeyEvent.VK_LEFT )
-			left = true;
-		
-		if( key == KeyEvent.VK_RIGHT )
-			right = true;
-		
-		if(key == KeyEvent.VK_SPACE)
-			toShoot = true;
-
 		//checkPosRange();
 		repaint();
 	}
