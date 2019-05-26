@@ -208,7 +208,14 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	int shootPeriod = 5, shootCnt = 0;
 	private void drawPlayer(Graphics g) {
     	playerPosY = (playerPosY-(up?playerSpeedY:0)+(down?playerSpeedY:0));
+    	if(playerPosY<=0) playerPosY = 1;
+    	if(playerPosY>=730) playerPosY = 729;
+    	
     	playerPosX = (playerPosX-(left?playerSpeedX:0)+(right?playerSpeedX:0));
+    	if(playerPosX<=0) playerPosX = 1;
+    	if(playerPosX>=500) playerPosX = 499;
+    	System.out.printf("%f %f\n", playerPosX, playerPosY);
+    	
     	if(toShoot) {
     		if(shootCnt>=shootPeriod) {
     			this.Shoot();
@@ -260,9 +267,6 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		return new Ellipse2D.Double(playerPosX-imgw/2, playerPosY-imgh/2, imgh, imgw).contains(tx, ty);
 	}
   
-  	private void checkPosRange() {
-		
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
