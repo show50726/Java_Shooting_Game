@@ -43,7 +43,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	float playerSpeedY = 5;
 	float playerSpeedX = 5;
 	
-	int playerHP = 50, maxHP = 50;
+	int playerHP = 20, maxHP = 20;
 	
 	static int SCREEN_WIDTH = 540;
 	static int SCREEN_HEIGHT = 800;
@@ -58,7 +58,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	
 	Timer time = new Timer(15, this);
 	
-	BufferedImage image;
+	BufferedImage image, gameoverimg;
 	
 	ImageIcon background = null;
 	JLabel wordLabel = null, bgLabel = null;
@@ -78,6 +78,14 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
             image = ImageIO.read(this.getClass().getResource("/fighter.png"));
             imgw = (int)image.getWidth()/10;
             imgh = (int)image.getHeight()/10;
+
+        } catch (IOException ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
+		
+		try {
+
+            gameoverimg = ImageIO.read(this.getClass().getResource("/gameover.png"));
 
         } catch (IOException ex) {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,9 +139,6 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         
         time.start();
 
-//        allEnemy.add(new EnemyA((int)playerPosX, 10));
-//        allEnemy.add(new EnemyB((int)playerPosX+20, 10));
-//        allEnemy.add(new EnemyA((int)playerPosX-50, 10));
 	}
 
 	private void spawnEnemy() {
@@ -304,6 +309,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     private void setHP(int delta) {
 		// TODO Auto-generated method stub
 		this.playerHP-=delta;
+		if(this.playerHP>this.maxHP) this.playerHP = this.maxHP;
 		checkDie();
 	}
 
@@ -372,6 +378,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     	}
     	
     	if(checkDie()) {
+    		g.drawImage(gameoverimg, 50, 260, gameoverimg.getWidth()/2, gameoverimg.getHeight()/2, this);
     		float alpha = 0f;
     		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
     		((Graphics2D) g).setComposite(ac);
