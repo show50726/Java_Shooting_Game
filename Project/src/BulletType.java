@@ -4,9 +4,10 @@ import java.awt.List;
 import java.awt.event.ActionEvent;
 
 class NormalBullet extends Bullet {
-	
 	int radius = 10;
-	public NormalBullet(float nx, float ny) {
+	public NormalBullet(float nx, float ny, int dx, int dy) {
+		this.dirX = dx;
+		this.dirY = dy;
 		bullet_color = Color.RED;
 		power = 2;
 		x = nx;
@@ -30,7 +31,8 @@ class NormalBullet extends Bullet {
 		System.out.println(x+" "+y);
 		g.setColor(bullet_color);
 		//x = x-(radius/2);
-		y = y-(radius/2);
+		y = y-dirY*(radius/2);
+		x = x-dirX*(radius/2);
 		g.fillOval((int)x,(int)y,radius,radius);
 		
 	}
@@ -44,10 +46,10 @@ class NormalBullet extends Bullet {
 }
 
 class EnemyABullet extends Bullet {
-	int dir;
 	int radius = 10;
-	public EnemyABullet(float nx, float ny, int dir) {
-		this.dir = dir;
+	public EnemyABullet(float nx, float ny, int dx, int dy) {
+		this.dirX = dx;
+		this.dirY = dy;
 		bullet_color = Color.WHITE;
 		power = 1;
 		x = nx;
@@ -72,18 +74,53 @@ class EnemyABullet extends Bullet {
 		this.speed = radius/2;
 		g.setColor(bullet_color);
 		//x = x-(radius/2);
-		if(this.dir==-1) {
-			y+=speed;
-			x-=speed;
+		x-=dirX*speed;
+		y+=dirY*speed;
+
+
+		g.fillOval((int)x,(int)y,radius,radius);
+	}
+
+	@Override
+	public void update(List fb, List eb, List bo, int px, int py) {
+
+	}
+
+}
+
+class EnemyBBullet extends Bullet {
+	int radius = 10;
+	public EnemyBBullet(float nx, float ny, int dx, int dy) {
+		this.dirX = dx;
+		this.dirY = dy;
+		bullet_color = Color.BLUE;
+		power = 2;
+		x = nx;
+		y = ny;
+	}
+	
+	@Override
+	public boolean canRemove() {
+		if(x<=0||x>=PlayerController.SCREEN_WIDTH||remove) {
+			return true;
 		}
-		else if(dir==0) {
-			y = y+speed;
+		if(y<=0||y>=PlayerController.SCREEN_HEIGHT) {
+			return true;
 		}
-		else {
-			x+=speed;
-			y+=speed;
-		}
-		y = y+(radius/2);
+		return false;
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		// TODO Auto-generated method stub
+		//System.out.println(x+" "+y);
+		this.speed = radius/3;
+		g.setColor(bullet_color);
+		//x = x-(radius/2);
+		x-=dirX*speed;
+		y+=dirY*speed;
+
+
 		g.fillOval((int)x,(int)y,radius,radius);
 	}
 

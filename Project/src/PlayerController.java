@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
+import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -52,6 +53,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	int Score = 0;
 	
 	int maxEnemy = 6, enemyCnt = 0, enemyType = 2;
+	int myBulletType = 0;
 	boolean canMove = true, explosionAnim = false;
 	
 	Timer time = new Timer(15, this);
@@ -66,6 +68,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	List<Bullet> myBullets	= new LinkedList<Bullet>();
 	List<Bullet> enmyBullets = new LinkedList<Bullet>();
 	List<Enemy> allEnemy = new LinkedList<Enemy>();
+	List<Item> allItem = new LinkedList<Item>();
 	JLabel Scorelabel;
 	
 	public PlayerController() {
@@ -110,7 +113,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         Scorelabel.setSize(50, 20);
         Scorelabel.setLocation(245, 3);
         Scorelabel.setForeground(Color.white);
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(Scorelabel);
+        GroupLayout layout = new javax.swing.GroupLayout(Scorelabel);
         Scorelabel.setLayout(layout);
         add(Scorelabel);
          
@@ -150,25 +153,40 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		}
 	}
 	
+	private void spawnItem(int x, int y, int type) {
+		if(type==0) {
+			allItem.add(new ChangeBulletItem(x, y));
+		}
+	}
+	
 	public void update(Graphics g) { 
 		System.out.println("update");
         this.paint(g); 
     } 
  
     public void paint(Graphics g) { 
+    	super.paint(g);
     	this.spawnEnemy();
-        super.paint(g);
-
+        
         for(Enemy i: allEnemy) {
         	try {
 				i.draw(g);
 				if(i.shoot()) {
 					if(i.type==0) {
-						enmyBullets.add(new EnemyABullet(i.x, i.y, -1));
-						enmyBullets.add(new EnemyABullet(i.x, i.y, 0));
-						enmyBullets.add(new EnemyABullet(i.x, i.y, 1));
+						enmyBullets.add(new EnemyABullet(i.x, i.y, -1, 1));
+						enmyBullets.add(new EnemyABullet(i.x, i.y, 0, 1));
+						enmyBullets.add(new EnemyABullet(i.x, i.y, 1, 1));
+					}
+					else if(i.type==1) {
+						enmyBullets.add(new EnemyBBullet(i.x, i.y, -1, 1));
+						enmyBullets.add(new EnemyBBullet(i.x, i.y, 0, 1));
+						enmyBullets.add(new EnemyBBullet(i.x, i.y, 1, 1));
+						enmyBullets.add(new EnemyBBullet(i.x, i.y, 0, -1));
+						enmyBullets.add(new EnemyBBullet(i.x, i.y, 1, -1));
+						enmyBullets.add(new EnemyBBullet(i.x, i.y, -1, -1));
 					}
 				}
+				
 			}
 			catch (Exception e) {
 				break;
@@ -206,14 +224,37 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			}
 		}
         
+        for (Item j : allItem) {
+			try {
+				if(!j.canRemove()) {
+					j.draw(g);
+					if(this.testHit(j.x, j.y)) {
+	        			this.myBulletType = 1;
+	        			j.remove = true;
+	        		}
+				}
+			}
+			catch (Exception e) {
+				break;
+			}
+		}
+        
         for(int j = allEnemy.size()-1; j >=0 ; j--) {
         	if(allEnemy.get(j).canRemove()) {
         		this.setScore(allEnemy.get(j).point);
+        		
+        		Random ran = new Random();
+        		int range = ran.nextInt(100);
+        		
+        		if(range>=0) {
+        			spawnItem(allEnemy.get(j).x, allEnemy.get(j).y, 0);
+        		}
+        		
         		allEnemy.remove(j);
         		enemyCnt--;
         	}
         }
-        
+
 //        for(Enemy i: allEnemy) {
 //        	if(i.canRemove()) allEnemy.remove(i);
 //        }
@@ -231,6 +272,13 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         for(int i = enmyBullets.size()-1; i >=0 ; i--) {
         	if(enmyBullets.get(i).canRemove()) {
         		enmyBullets.remove(i);
+        		
+        	}
+        }
+        
+        for(int i = allItem.size()-1; i >=0 ; i--) {
+        	if(allItem.get(i).canRemove()) {
+        		allItem.remove(i);
         		
         	}
         }
@@ -352,7 +400,13 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	}
 	
 	void Shoot() {
-		myBullets.add(new NormalBullet(playerPosX+15, playerPosY));
+		if(myBulletType==0)
+			myBullets.add(new NormalBullet(playerPosX+15, playerPosY, 0, 1));
+		else if(myBulletType==1) {
+			myBullets.add(new NormalBullet(playerPosX+15, playerPosY, 0, 1));
+			myBullets.add(new NormalBullet(playerPosX+15, playerPosY, 1, 1));
+			myBullets.add(new NormalBullet(playerPosX+15, playerPosY, -1, 1));
+		}
 	}
 	
 	public boolean testHit(double tx, double ty) {

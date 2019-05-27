@@ -29,8 +29,8 @@ class EnemyA extends Enemy {
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         }
 		
-		this.imgh = (int)image.getWidth()/10;
-		this.imgw = (int)image.getHeight()/10;
+		this.imgw = (int)image.getWidth()/10;
+		this.imgh = (int)image.getHeight()/10;
 	}
 	
 	public boolean canRemove () {
@@ -54,7 +54,7 @@ class EnemyA extends Enemy {
 		
 		y+=speed;
 		
-		g.drawImage(image, x, y, imgh, imgw, null);
+		g.drawImage(image, x, y, imgw, imgh, null);
 		
 		hit = false;
 	}
@@ -80,7 +80,7 @@ class EnemyB extends Enemy{
 	
 	EnemyB(int x, int y){
 		this.point = 1;
-		this.type = -1;
+		this.type = 1;
 		this.remove = false;
 		this.x = x;
 		this.y = y;
@@ -93,8 +93,8 @@ class EnemyB extends Enemy{
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         }
 		
-		this.imgh = (int)image.getWidth()/10;
-		this.imgw = (int)image.getHeight()/10;
+		this.imgw = (int)image.getWidth()/10;
+		this.imgh = (int)image.getHeight()/10;
 	}
 
 	@Override
@@ -108,7 +108,7 @@ class EnemyB extends Enemy{
 			x -= range;
 		else x += range;
 		y = y+speed;
-		g.drawImage(image, x, y, imgh, imgw, null);
+		g.drawImage(image, x, y, imgw, imgh, null);
 		
 		hit = false;
 	}
@@ -136,7 +136,9 @@ class EnemyB extends Enemy{
 
 	@Override
 	public boolean shoot() {
-		// TODO Auto-generated method stub
+		Random ran = new Random();
+		int range = ran.nextInt(1000);
+		if(range%23==0) return true;
 		return false;
 	}
 	
