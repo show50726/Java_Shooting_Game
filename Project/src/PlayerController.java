@@ -43,7 +43,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	float playerSpeedY = 5;
 	float playerSpeedX = 5;
 	
-	int playerHP = 20;
+	int playerHP = 50, maxHP = 50;
 	
 	static int SCREEN_WIDTH = 540;
 	static int SCREEN_HEIGHT = 800;
@@ -52,7 +52,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	
 	int Score = 0;
 	
-	int maxEnemy = 6, enemyCnt = 0, enemyType = 2;
+	int maxEnemy = 2, enemyCnt = 0, enemyType = 2;
 	int myBulletType = 0;
 	boolean canMove = true, explosionAnim = false;
 	
@@ -157,6 +157,9 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		if(type==0) {
 			allItem.add(new ChangeBulletItem(x, y));
 		}
+		else if(type==1) {
+			allItem.add(new RecoverItem(x, y));
+		}
 	}
 	
 	public void update(Graphics g) { 
@@ -229,7 +232,12 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 				if(!j.canRemove()) {
 					j.draw(g);
 					if(this.testHit(j.x, j.y)) {
-	        			this.myBulletType = 1;
+						if(j.type==0) {
+							this.myBulletType = 1;
+						}
+						else if(j.type==1) {
+							this.setHP(-10);
+						}
 	        			j.remove = true;
 	        		}
 				}
@@ -246,8 +254,11 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         		Random ran = new Random();
         		int range = ran.nextInt(100);
         		
-        		if(range>=0) {
+        		if(range>=80) {
         			spawnItem(allEnemy.get(j).x, allEnemy.get(j).y, 0);
+        		}
+        		else if(range<=30) {
+        			spawnItem(allEnemy.get(j).x, allEnemy.get(j).y, 1);
         		}
         		
         		allEnemy.remove(j);
@@ -299,7 +310,22 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     private void setScore(int delta) {
     	this.Score+=delta;
     	Scorelabel.setText("Score: "+this.Score);
-
+    	setMaxEnemy();
+    }
+    
+    private void setMaxEnemy() {
+    	if(this.Score>=15) {
+    		this.maxEnemy = 3;
+    	}
+    	else if(this.Score>=30) {
+    		this.maxEnemy = 4;
+    	}
+    	else if(this.Score>=60) {
+    		this.maxEnemy = 5;
+    	}
+    	else if(this.Score>=120) {
+    		this.maxEnemy = 6;
+    	}
     }
     
 	private boolean checkDie() {
@@ -318,9 +344,10 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	}
 	
 	private void drawHPBar(Graphics g) {
+		int k = 100/this.maxHP;
 		g.setColor(Color.RED);
 		g.drawRect(400, 30, 100, 10);
-		g.fillRect(400, 30, this.playerHP*5>=0?this.playerHP*5:0, 10);
+		g.fillRect(400, 30, this.playerHP*k>=0?this.playerHP>this.maxHP?this.maxHP*k:this.playerHP*k:0, 10);
 	}
 
 	int explosionCnt = 0;
@@ -396,7 +423,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 				toShoot = true;
 		}
 		//checkPosRange();
-		repaint();
+		//repaint();
 	}
 	
 	void Shoot() {

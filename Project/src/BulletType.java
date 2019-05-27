@@ -4,7 +4,7 @@ import java.awt.List;
 import java.awt.event.ActionEvent;
 
 class NormalBullet extends Bullet {
-	int radius = 10;
+	int radius = 8;
 	public NormalBullet(float nx, float ny, int dx, int dy) {
 		this.dirX = dx;
 		this.dirY = dy;
@@ -29,12 +29,13 @@ class NormalBullet extends Bullet {
 	public void draw(Graphics g) {
 		// TODO Auto-generated method stub
 		System.out.println(x+" "+y);
-		g.setColor(bullet_color);
+		
 		//x = x-(radius/2);
 		y = y-dirY*(radius/2);
 		x = x-dirX*(radius/2);
+		g.setColor(bullet_color);
 		g.fillOval((int)x,(int)y,radius,radius);
-		
+
 	}
 
 	@Override
@@ -46,7 +47,7 @@ class NormalBullet extends Bullet {
 }
 
 class EnemyABullet extends Bullet {
-	int radius = 10;
+	int radius = 8;
 	public EnemyABullet(float nx, float ny, int dx, int dy) {
 		this.dirX = dx;
 		this.dirY = dy;
@@ -89,12 +90,12 @@ class EnemyABullet extends Bullet {
 }
 
 class EnemyBBullet extends Bullet {
-	int radius = 10;
+	int radius = 8;
 	public EnemyBBullet(float nx, float ny, int dx, int dy) {
 		this.dirX = dx;
 		this.dirY = dy;
 		bullet_color = Color.BLUE;
-		power = 2;
+		power = 1;
 		x = nx;
 		y = ny;
 	}
@@ -114,7 +115,7 @@ class EnemyBBullet extends Bullet {
 	public void draw(Graphics g) {
 		// TODO Auto-generated method stub
 		//System.out.println(x+" "+y);
-		this.speed = radius/3;
+		this.speed = radius/2;
 		g.setColor(bullet_color);
 		//x = x-(radius/2);
 		x-=dirX*speed;

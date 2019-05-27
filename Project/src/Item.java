@@ -10,6 +10,12 @@ abstract public class Item {
 	Image image;
 	
 	public boolean canRemove () {
+		if(x<=0||x>=PlayerController.SCREEN_WIDTH||remove) {
+			return true;
+		}
+		if(y<=0||y>=PlayerController.SCREEN_HEIGHT) {
+			return true;
+		}
 		return false;
 	}
 	

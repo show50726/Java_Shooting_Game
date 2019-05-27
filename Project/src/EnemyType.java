@@ -64,7 +64,7 @@ class EnemyA extends Enemy {
 	}
 	
 	public boolean testHit (double tx, double ty) {
-		return new Ellipse2D.Double(x-imgw/2, y-imgh/2, imgh, imgw).contains(tx, ty);
+		return new Ellipse2D.Double(x-imgw/2, y-imgh/2, imgw, imgh).contains(tx, ty);
 	}
 	
 	public boolean shoot() {
@@ -108,6 +108,7 @@ class EnemyB extends Enemy{
 			x -= range;
 		else x += range;
 		y = y+speed;
+		
 		g.drawImage(image, x, y, imgw, imgh, null);
 		
 		hit = false;
@@ -131,7 +132,7 @@ class EnemyB extends Enemy{
 
 	@Override
 	public boolean testHit(double tx, double ty) {
-		return new Ellipse2D.Double(x-imgw/2, y-imgh/2, imgh, imgw).contains(tx, ty);
+		return new Ellipse2D.Double(x-imgw/2, y-imgh/2, imgw, imgh).contains(tx, ty);
 	}
 
 	@Override

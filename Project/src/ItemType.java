@@ -31,6 +31,42 @@ class ChangeBulletItem extends Item {
 		
 	}
 	
+//	public boolean canRemove () {
+//		if(x<=0||x>=PlayerController.SCREEN_WIDTH||remove) {
+//			return true;
+//		}
+//		if(y<=0||y>=PlayerController.SCREEN_HEIGHT) {
+//			return true;
+//		}
+//		return false;
+//	}
+
+}
+
+class RecoverItem extends Item {
+	
+	RecoverItem(int x, int y){
+		this.x = x;
+		this.y = y;
+		this.type = 1;
+		this.remove = false;
+		try {
+            image = ImageIO.read(this.getClass().getResource("/fuel.png"));
+            
+        } catch (IOException ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
+		
+		this.imgw = (int)image.getWidth(null)/5;
+		this.imgh = (int)image.getHeight(null)/5;
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		g.drawImage(image, x, y, imgh, imgw, null);
+		
+	}
+	
 	public boolean canRemove () {
 		if(x<=0||x>=PlayerController.SCREEN_WIDTH||remove) {
 			return true;
