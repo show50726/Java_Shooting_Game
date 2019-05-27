@@ -43,7 +43,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	float playerSpeedY = 5;
 	float playerSpeedX = 5;
 	
-	int playerHP = 20, maxHP = 20;
+	int playerHP = 50, maxHP = 50;
 	
 	static int SCREEN_WIDTH = 540;
 	static int SCREEN_HEIGHT = 800;
@@ -52,7 +52,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	
 	int Score = 0;
 	
-	int maxEnemy = 2, enemyCnt = 0, enemyType = 2;
+	int maxEnemy = 2, enemyCnt = 0, enemyType = 3;
 	int myBulletType = 0;
 	boolean canMove = true, explosionAnim = false;
 	
@@ -150,11 +150,17 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			int pos = ran.nextInt(500);
 			if(type==0) {
 				allEnemy.add(new EnemyA(pos, 10));
+				enemyCnt++;
 			}
 			else if(type==1) {
 				allEnemy.add(new EnemyB(pos, 10));
+				enemyCnt++;
 			}
-			enemyCnt++;
+			else if(type==2&&this.Score>=50) {
+				System.out.println("OK");
+				allEnemy.add(new EnemyC(pos, 10));
+				enemyCnt++;
+			}
 		}
 	}
 	
@@ -192,6 +198,9 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 						enmyBullets.add(new EnemyBBullet(i.x, i.y, 0, -1));
 						enmyBullets.add(new EnemyBBullet(i.x, i.y, 1, -1));
 						enmyBullets.add(new EnemyBBullet(i.x, i.y, -1, -1));
+					}
+					else if(i.type==2) {
+						enmyBullets.add(new EnemyCBullet(i.x, i.y, 0, 1));
 					}
 				}
 				

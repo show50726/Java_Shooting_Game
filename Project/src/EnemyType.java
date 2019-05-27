@@ -144,3 +144,72 @@ class EnemyB extends Enemy{
 	}
 	
 }
+
+class EnemyC extends Enemy{
+	
+	EnemyC(int x, int y){
+		this.point = 5;
+		this.type = 2;
+		this.remove = false;
+		this.x = x;
+		this.y = y;
+		this.hp = 8;
+		this.speed = 2;
+		try {
+            image = ImageIO.read(this.getClass().getResource("/ufo.png"));
+            
+        } catch (IOException ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        }
+		
+		this.imgw = (int)image.getWidth()/5;
+		this.imgh = (int)image.getHeight()/5;
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		// TODO Auto-generated method stub
+		Random ran = new Random();
+		
+		int range = ran.nextInt(speed*2+1)-speed;
+		//System.out.printf("%d\n", range);
+		if(x+range<=0||x+range>=PlayerController.SCREEN_WIDTH)
+			x -= range;
+		else x += range;
+		y = y+speed;
+		
+		g.drawImage(image, x, y, imgw, imgh, null);
+		
+		hit = false;
+	}
+	
+	public boolean canRemove () {
+		if(x<=0||x>=PlayerController.SCREEN_WIDTH||remove||this.hp<=0) {
+			return true;
+		}
+		if(y<=0||y>=PlayerController.SCREEN_HEIGHT) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void update(List fb, List eb, List bo, int px, int py) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean testHit(double tx, double ty) {
+		return new Ellipse2D.Double(x-imgw/2, y-imgh/2, imgw, imgh).contains(tx, ty);
+	}
+
+	@Override
+	public boolean shoot() {
+		Random ran = new Random();
+		int range = ran.nextInt(1000);
+		if(range%29==0) return true;
+		return false;
+	}
+	
+}
