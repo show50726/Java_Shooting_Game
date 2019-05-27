@@ -15,7 +15,7 @@ class EnemyA extends Enemy {
 
 	
 	EnemyA(int x, int y){
-
+		this.point = 3;
 		this.type = 0;
 		this.remove = false;
 		this.x = x;
@@ -79,6 +79,7 @@ class EnemyA extends Enemy {
 class EnemyB extends Enemy{
 	
 	EnemyB(int x, int y){
+		this.point = 1;
 		this.type = -1;
 		this.remove = false;
 		this.x = x;

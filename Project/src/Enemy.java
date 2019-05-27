@@ -4,7 +4,7 @@ import java.awt.List;
 import java.awt.image.BufferedImage;
 
 abstract class Enemy {
-	public int hp = 10, speed = 1;
+	public int hp = 10, speed = 1, point = 5;
 	//public Bullet b;
 	public int x, y;
 	public Color enmyColor;

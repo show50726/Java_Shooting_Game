@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -30,6 +31,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.border.TitledBorder;
 import javax.swing.text.View;
 
 public class PlayerController extends JPanel implements KeyListener, ActionListener {
@@ -89,6 +91,9 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	    }
 		
 		JFrame frame = new JFrame();
+		
+		
+		
 		frame.setTitle("Test");
 		frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 		this.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -100,11 +105,15 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		frame.add(this);
         frame.addKeyListener(this);
         
-        //set score label
-        Scorelabel = new JLabel("Score: ", Score);
+      //set score label
+        Scorelabel = new JLabel("Score: "+Score);
         Scorelabel.setSize(50, 20);
-        Scorelabel.setLocation(400, 20);
-        //add(Scorelabel);
+        Scorelabel.setLocation(245, 3);
+        Scorelabel.setForeground(Color.white);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(Scorelabel);
+        Scorelabel.setLayout(layout);
+        add(Scorelabel);
+         
         
 //        background = new ImageIcon(getClass().getResource("/bg2.jpg"));     
 //        bgLabel = new JLabel(background);     
@@ -199,6 +208,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         
         for(int j = allEnemy.size()-1; j >=0 ; j--) {
         	if(allEnemy.get(j).canRemove()) {
+        		this.setScore(allEnemy.get(j).point);
         		allEnemy.remove(j);
         		enemyCnt--;
         	}
@@ -238,7 +248,11 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		checkDie();
 	}
 
+    private void setScore(int delta) {
+    	this.Score+=delta;
+    	Scorelabel.setText("Score: "+this.Score);
 
+    }
     
 	private boolean checkDie() {
 		// TODO Auto-generated method stub
@@ -291,7 +305,6 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     	g.drawImage(image, (int)playerPosX, (int)playerPosY, (int)image.getWidth()/10, (int)image.getHeight()/10, this);
     	
     	if(checkDie()&&!explosionAnim) {
-    		System.out.print("explosion\n");
     		float alpha = 1f;
     		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
     		((Graphics2D) g).setComposite(ac);
