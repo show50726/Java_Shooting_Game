@@ -7,6 +7,9 @@ import java.awt.image.ImageObserver;
 import javax.imageio.ImageIO;
 import javax.swing.text.View;
 
+
+/* Design pattern: Item effect */
+
 class ChangeBulletItem extends Item {
 	
 	ChangeBulletItem(int x, int y){
