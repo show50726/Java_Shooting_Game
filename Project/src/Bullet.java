@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.List;
 
+
 abstract class Bullet {
 	public float x, y;
 	public int dirX, dirY;
@@ -9,7 +10,13 @@ abstract class Bullet {
 	public boolean hit = false, remove = false;
 	public Color bullet_color = Color.WHITE;
 	
-	abstract public boolean canRemove();
-	abstract public boolean testHit (double x, double y);
+	public boolean canRemove () {
+		return hit;
+		
+	}
+	
+	public boolean testHit (double x, double y) { return false; }
+	
 	abstract public void draw (Graphics g);
+	abstract public void update (List fb, List eb, List bo, int px, int py);
 }

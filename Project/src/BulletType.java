@@ -37,6 +37,13 @@ class NormalBullet extends Bullet {
 		g.fillOval((int)x,(int)y,radius,radius);
 
 	}
+
+	@Override
+	public void update(List fb, List eb, List bo, int px, int py) {
+		// TODO Auto-generated method stub
+		y-=speed;
+	}
+
 }
 
 class EnemyABullet extends Bullet {

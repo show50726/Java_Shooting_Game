@@ -21,5 +21,4 @@ abstract public class Item {
 	
 	abstract public void draw (Graphics g);
 
-	abstract public void itemEffect(); 
 }

@@ -8,6 +8,7 @@ abstract class Enemy {
 	//public Bullet b;
 	public int x, y;
 	public Color enmyColor;
+	boolean hit = false;
 	public int imgh, imgw;
 	public boolean remove = true;
 	public int type;
@@ -21,6 +22,8 @@ abstract class Enemy {
 	abstract public boolean testHit (double tx, double ty);
 	
 	abstract public void draw (Graphics g);
+	
+	abstract public void update (List fb, List eb, List bo, int px, int py);
 	
 	public void setHP(int delta) {
 		hp-=delta;
