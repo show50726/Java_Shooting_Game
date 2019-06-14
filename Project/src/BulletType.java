@@ -28,7 +28,7 @@ class NormalBullet extends Bullet {
 	@Override
 	public void draw(Graphics g) {
 		// TODO Auto-generated method stub
-		System.out.println(x+" "+y);
+		//System.out.println(x+" "+y);
 		
 		//x = x-(radius/2);
 		y = y-dirY*(radius/2);

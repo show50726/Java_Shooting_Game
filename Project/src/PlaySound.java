@@ -28,6 +28,7 @@ public class PlaySound implements Runnable {
 		ToPlay();
 	}
 
+	@SuppressWarnings("restriction")
 	private void ToPlay(){
 		// TODO Auto-generated method stub
 		try {

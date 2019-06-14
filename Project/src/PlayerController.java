@@ -46,6 +46,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	float playerSpeedX = 5;
 	
 	int playerHP = 50, maxHP = 50;
+	int laserPower = 30, maxlaserPower = 30;
 	
 	static int SCREEN_WIDTH = 540;
 	static int SCREEN_HEIGHT = 800;
@@ -57,6 +58,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	int maxEnemy = 2, enemyCnt = 0, enemyType = 3;
 	int myBulletType = 0;
 	boolean canMove = true, explosionAnim = false;
+	boolean canShootLaser = false;
 	
 	Timer time = new Timer(15, this);
 	
@@ -161,7 +163,6 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 				enemyCnt++;
 			}
 			else if(type==2&&this.Score>=50) {
-				System.out.println("OK");
 				allEnemy.add(new EnemyC(pos, 10));
 				enemyCnt++;
 			}
@@ -215,6 +216,10 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         	for (Bullet j : myBullets) {
         		if(i.testHit(j.x, j.y)) {
         			i.setHP(j.power);
+        			if(i.hp<=0) {
+        				this.setPower(10);
+        				this.setScore(i.point);
+        			}
         			j.remove = true;
         			p = new PlaySound("EnemyDie.wav");
         			//i.remove = true;
@@ -269,9 +274,14 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		}
         
         for(int j = allEnemy.size()-1; j >=0 ; j--) {
-        	if(allEnemy.get(j).canRemove()) {
-        		this.setScore(allEnemy.get(j).point);
+        	if(canShootLaser)
+        		System.out.printf("%f %d\n", playerPosX, allEnemy.get(j).x);
+        	if(allEnemy.get(j).canRemove()||(canShootLaser&&((int)playerPosX-3<=allEnemy.get(j).x)&&((int)playerPosX+3>=allEnemy.get(j).x))) {
         		
+        		if((canShootLaser&&((int)playerPosX-3<=allEnemy.get(j).x)&&((int)playerPosX+3>=allEnemy.get(j).x))){
+        			p = new PlaySound("EnemyDie.wav");
+        		}
+
         		Random ran = new Random();
         		int range = ran.nextInt(100);
         		
@@ -320,6 +330,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 //        }
         
         drawHPBar(g);
+        drawPowerBar(g);
         drawPlayer(g);
     }
 
@@ -329,6 +340,12 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		if(this.playerHP>this.maxHP) this.playerHP = this.maxHP;
 		checkDie();
 	}
+    
+    private void setPower(int delta) {
+		// TODO Auto-generated method stub
+		laserPower+=delta;
+		if(laserPower>maxlaserPower) laserPower = maxlaserPower;
+	}
 
     private void setScore(int delta) {
     	this.Score+=delta;
@@ -336,18 +353,11 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     	setMaxEnemy();
     }
     
+    private int threshold = 15;
     private void setMaxEnemy() {
-    	if(this.Score>=15) {
-    		this.maxEnemy = 3;
-    	}
-    	else if(this.Score>=30) {
-    		this.maxEnemy = 4;
-    	}
-    	else if(this.Score>=60) {
-    		this.maxEnemy = 5;
-    	}
-    	else if(this.Score>=120) {
-    		this.maxEnemy = 6;
+    	if(this.Score>=threshold) {
+    		this.maxEnemy++;
+    		threshold*=2;
     	}
     }
     
@@ -372,9 +382,17 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		g.drawRect(400, 30, 100, 10);
 		g.fillRect(400, 30, this.playerHP*k>=0?this.playerHP>this.maxHP?this.maxHP*k:this.playerHP*k:0, 10);
 	}
+	
+	private void drawPowerBar(Graphics g) {
+		int k = 90/maxlaserPower;
+		g.setColor(Color.YELLOW);
+		g.drawRect(400, 50, 90, 10);
+		g.fillRect(400, 50, laserPower*k, 10);
+	}
 
 	int explosionCnt = 0;
 	int shootPeriod = 5, shootCnt = 0;
+	int laserCnt = 0, laserPeriod = 140;
 	private void drawPlayer(Graphics g) {
 		
     	playerPosY = (playerPosY-(up?playerSpeedY:0)+(down?playerSpeedY:0));
@@ -392,6 +410,16 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     			shootCnt%=shootPeriod;
     		}
     		else shootCnt++;
+    	}
+    	
+    	if(canShootLaser&&laserCnt<=laserPeriod) {
+    		laserCnt++;
+    		//g.drawLine((int)playerPosX+15, (int)playerPosY, (int)playerPosX, (int)-playerPosY);
+    		g.drawRect((int)playerPosX+12, (int)playerPosY, -6, -1000);
+    	}
+    	else if(laserCnt>laserPeriod){
+    		laserCnt = 0;
+    		canShootLaser = false;
     	}
     	
     	if(checkDie()) {
@@ -447,6 +475,9 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			
 			if(key == KeyEvent.VK_SPACE)
 				toShoot = true;
+			
+			if( key == KeyEvent.VK_Z )
+				ShootLaser();
 		}
 		//checkPosRange();
 		//repaint();
@@ -492,8 +523,19 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		if( key == KeyEvent.VK_RIGHT )
 			right = false;
 		
-		if(key == KeyEvent.VK_SPACE)
+		if( key == KeyEvent.VK_SPACE )
 			toShoot = false;
+		
+		
+	}
+
+	private void ShootLaser() {
+		// TODO Auto-generated method stub
+		if(laserPower==maxlaserPower) {
+			canShootLaser = true;
+			laserPower = 0;
+			p = new PlaySound("LaserShoot.wav");
+		}
 	}
 
 	@Override
