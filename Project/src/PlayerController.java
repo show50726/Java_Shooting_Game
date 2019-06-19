@@ -415,7 +415,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     	if(canShootLaser&&laserCnt<=laserPeriod) {
     		laserCnt++;
     		//g.drawLine((int)playerPosX+15, (int)playerPosY, (int)playerPosX, (int)-playerPosY);
-    		g.drawRect((int)playerPosX+12, (int)playerPosY, -6, -1000);
+    		g.fillRect((int)playerPosX+12, (int)playerPosY-1000, 6, 1000);
     	}
     	else if(laserCnt>laserPeriod){
     		laserCnt = 0;
