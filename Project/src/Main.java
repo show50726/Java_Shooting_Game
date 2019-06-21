@@ -12,7 +12,7 @@ public class Main {
 	    JFrame frame = new JFrame();
 	    JButton mybutton = new JButton("Start");
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    
+	    frame.setTitle("Start");
 	    frame.setBounds(0, 0, PlayerController.SCREEN_WIDTH, PlayerController.SCREEN_HEIGHT);
 	    frame.setLayout(new BorderLayout());
 	    frame.setSize(PlayerController.SCREEN_WIDTH, PlayerController.SCREEN_HEIGHT);

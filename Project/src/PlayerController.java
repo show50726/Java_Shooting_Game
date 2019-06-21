@@ -59,6 +59,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	int myBulletType = 0;
 	boolean canMove = true, explosionAnim = false;
 	boolean canShootLaser = false;
+	boolean gameover = true;
 	
 	Timer time = new Timer(15, this);
 	
@@ -68,6 +69,8 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	JLabel wordLabel = null, bgLabel = null;
 	JPanel imagePanel = null;
 	
+	JPanel scoreboardPanel = null;
+	
 	PlaySound p = null;
 
 	private static List<BufferedImage> bg = new ArrayList<BufferedImage>();
@@ -76,6 +79,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	List<Enemy> allEnemy = new LinkedList<Enemy>();
 	List<Item> allItem = new LinkedList<Item>();
 	JLabel Scorelabel;
+	JFrame frame;
 	
 	public PlayerController() {
 
@@ -107,7 +111,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	        }
 	    }
 		
-		JFrame frame = new JFrame();
+		frame = new JFrame();
 		
 		
 		
@@ -217,7 +221,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         		if(i.testHit(j.x, j.y)) {
         			i.setHP(j.power);
         			if(i.hp<=0) {
-        				this.setPower(10);
+        				this.setPower(1);
         				this.setScore(i.point);
         			}
         			j.remove = true;
@@ -240,8 +244,9 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			try {
 				if(!j.canRemove()) {
 					j.draw(g);
-					if(this.testHit(j.x, j.y)) {
+					if(this.testHit(j.x, j.y)&&playerHP>0) {
 	        			this.setHP(j.power);
+	        			p = new PlaySound("playerGotHit.wav");
 	        			j.remove = true;
 	        		}
 				}
@@ -370,7 +375,8 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			left = false;
 			right = false;
 			toShoot = false;
-
+			
+			
 			return true;
 		}
 		return false;
@@ -415,29 +421,47 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     	if(canShootLaser&&laserCnt<=laserPeriod) {
     		laserCnt++;
     		//g.drawLine((int)playerPosX+15, (int)playerPosY, (int)playerPosX, (int)-playerPosY);
-    		g.fillRect((int)playerPosX+12, (int)playerPosY-1000, 6, 1000);
+    		g.fillRect((int)playerPosX+16, (int)playerPosY-1000, 6, 1000);
     	}
     	else if(laserCnt>laserPeriod){
     		laserCnt = 0;
     		canShootLaser = false;
     	}
     	
+//    	if(checkDie()) {
+//    		g.drawImage(gameoverimg, 50, 260, gameoverimg.getWidth()/2, gameoverimg.getHeight()/2, this);
+//    		float alpha = 0f;
+//    		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+//    		((Graphics2D) g).setComposite(ac);
+//    	}
+    	
     	if(checkDie()) {
-    		g.drawImage(gameoverimg, 50, 260, gameoverimg.getWidth()/2, gameoverimg.getHeight()/2, this);
+    		if(gameover) {
+    			g.drawImage(gameoverimg, 50, 260, gameoverimg.getWidth()/2, gameoverimg.getHeight()/2, this);
+    		}
     		float alpha = 0f;
     		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
     		((Graphics2D) g).setComposite(ac);
+    		
+    		if(!explosionAnim) {
+    			alpha = 1f;
+        		ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+        		((Graphics2D) g).setComposite(ac);
+        		g.drawImage(bg.get(explosionCnt/2), (int)playerPosX, (int)playerPosY, (int)bg.get(explosionCnt/2).getWidth()/2, (int)bg.get(explosionCnt/2).getHeight()/2, this);
+        		explosionCnt++;
+    		}
+    		
     	}
     	
     	g.drawImage(fighterImage, (int)playerPosX, (int)playerPosY, (int)fighterImage.getWidth()/10, (int)fighterImage.getHeight()/10, this);
     	
-    	if(checkDie()&&!explosionAnim) {
-    		float alpha = 1f;
-    		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
-    		((Graphics2D) g).setComposite(ac);
-    		g.drawImage(bg.get(explosionCnt/2), (int)playerPosX, (int)playerPosY, (int)bg.get(explosionCnt/2).getWidth()/2, (int)bg.get(explosionCnt/2).getHeight()/2, this);
-    		explosionCnt++;
-    	}    
+//    	if(checkDie()&&!explosionAnim) {
+//    		float alpha = 1f;
+//    		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+//    		((Graphics2D) g).setComposite(ac);
+//    		g.drawImage(bg.get(explosionCnt/2), (int)playerPosX, (int)playerPosY, (int)bg.get(explosionCnt/2).getWidth()/2, (int)bg.get(explosionCnt/2).getHeight()/2, this);
+//    		explosionCnt++;
+//    	}    
     	
     	if(explosionCnt==1) p = new PlaySound("explosion.wav");
     	
@@ -478,6 +502,20 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			
 			if( key == KeyEvent.VK_Z )
 				ShootLaser();
+		}
+		else {
+//			gameover = false;
+//			scoreboardPanel = new JPanel();
+//			scoreboardPanel.setBackground(Color.WHITE);
+//			scoreboardPanel.setSize(350, 600);
+//			scoreboardPanel.setLocation(100, 100);
+//
+//			add(scoreboardPanel);
+			
+			new ScoreboardScene(Score);
+			frame.setVisible(false);
+			frame.dispose();
+			
 		}
 		//checkPosRange();
 		//repaint();
