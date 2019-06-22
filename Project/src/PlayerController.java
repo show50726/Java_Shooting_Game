@@ -125,6 +125,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		this.setBackground(Color.BLACK);
 		frame.add(this);
         frame.addKeyListener(this);
+        setVisible(true);
         
       //set score label
         Scorelabel = new JLabel("Score: "+Score);
