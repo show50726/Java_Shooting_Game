@@ -9,16 +9,16 @@ public class PlaySound implements Runnable {
 	
 	public PlaySound(String sound) {
 		try {
-			this.sound = new FileInputStream(sound);
+			this.sound = new FileInputStream(sound);           //load the .wav file
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		play();
+		play();            //play the sound
 	}
 	
 	public void play() 
     {
-        Thread t = new Thread(this);
+        Thread t = new Thread(this);           //create new thread to play (or we cannot play two sound at the same time)
         t.start();
     }
 

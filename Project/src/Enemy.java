@@ -4,26 +4,24 @@ import java.awt.List;
 import java.awt.image.BufferedImage;
 
 abstract class Enemy {
-	public int hp = 10, speed = 1, point = 5;
+	public int hp = 10, speed = 1, point = 5;           //the points player gets after killing the enemy
 	//public Bullet b;
-	public int x, y;
+	public int x, y;               //position of the enemy
 	public Color enmyColor;
-	boolean hit = false;
-	public int imgh, imgw;
+	boolean hit = false;      
+	public int imgh, imgw;          //height and width of the enemy
 	public boolean remove = true;
-	public int type;
+	public int type;               //type index
 	
-	BufferedImage image;
+	BufferedImage image;           //image of the enemy
 	
-	abstract public boolean canRemove ();
+	abstract public boolean canRemove ();        //if remove==true or canRemove==true => remove the enemy
 	
-	abstract public boolean shoot ();
+	abstract public boolean shoot ();             //different shooting method
 	
-	abstract public boolean testHit (double tx, double ty);
+	abstract public boolean testHit (double tx, double ty);         //test collision
 	
 	abstract public void draw (Graphics g);
-	
-	abstract public void update (List fb, List eb, List bo, int px, int py);
 	
 	public void setHP(int delta) {
 		hp-=delta;

@@ -25,7 +25,7 @@ public class Main extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					new Main();
+					new Main();          //create main scene
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -40,7 +40,6 @@ public class Main extends JFrame {
 		setFont(new Font("Bahnschrift", Font.BOLD, 16));
 		setTitle("Start");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setBounds(100, 100, 540, 700);
 		setSize(PlayerController.SCREEN_WIDTH, PlayerController.SCREEN_HEIGHT-51);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

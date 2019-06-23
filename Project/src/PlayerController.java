@@ -39,33 +39,32 @@ import javax.swing.text.View;
 
 public class PlayerController extends JPanel implements KeyListener, ActionListener {
 
-	float playerPosX = 270;
+	float playerPosX = 270;               //initial position of the player
 	float playerPosY = 700;
 	
-	float playerSpeedY = 5;
+	float playerSpeedY = 5;          //moving speed of the player
 	float playerSpeedX = 5;
 	
-	int playerHP = 50, maxHP = 50;
-	int laserPower = 30, maxlaserPower = 30;
+	int playerHP = 50, maxHP = 50;         //health point of the player
+	int laserPower = 30, maxlaserPower = 30;     //laser power of the player
 	
-	static int SCREEN_WIDTH = 540;
+	static int SCREEN_WIDTH = 540;        
 	static int SCREEN_HEIGHT = 800;
 	
-	int imgh, imgw;
+	int imgh, imgw;         //image height and width of the player fighter
 	
-	int Score = 0;
+	int Score = 0;         
 	
-	int maxEnemy = 2, enemyCnt = 0, enemyType = 3;
-	int myBulletType = 0;
-	boolean canMove = true, explosionAnim = false;
-	boolean canShootLaser = false;
+	int maxEnemy = 2, enemyCnt = 0, enemyType = 3;       //enemy counter
+	int myBulletType = 0;                                //player's bullet type
+	boolean canMove = true, explosionAnim = false;       //if canMove==false player is not able to move the fighter
+	boolean canShootLaser = false;                       
 	boolean gameover = true;
 	
-	Timer time = new Timer(15, this);
+	Timer time = new Timer(15, this);               //timer
 	
-	BufferedImage fighterImage, gameoverimg;
+	BufferedImage fighterImage, gameoverimg;        
 	
-	ImageIcon background = null;
 	JLabel wordLabel = null, bgLabel = null;
 	JPanel imagePanel = null;
 	
@@ -73,8 +72,8 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	
 	PlaySound p = null;
 
-	private static List<BufferedImage> bg = new ArrayList<BufferedImage>();
-	List<Bullet> myBullets	= new LinkedList<Bullet>();
+	private static List<BufferedImage> bg = new ArrayList<BufferedImage>();         //arraylist of explosion animation
+	List<Bullet> myBullets	= new LinkedList<Bullet>();                            //list of different objects;
 	List<Bullet> enmyBullets = new LinkedList<Bullet>();
 	List<Enemy> allEnemy = new LinkedList<Enemy>();
 	List<Item> allItem = new LinkedList<Item>();
@@ -83,7 +82,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	
 	public PlayerController() {
 
-		try {
+		try {                                   //load every image of the game when initialization
 
             fighterImage = ImageIO.read(this.getClass().getResource("/fighter.png"));
             imgw = (int)fighterImage.getWidth()/10;
@@ -111,9 +110,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	        }
 	    }
 		
-		frame = new JFrame();
-		
-		
+		frame = new JFrame();                   //game frame
 		
 		frame.setTitle("Game");
 		frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -134,25 +131,13 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         Scorelabel.setForeground(Color.white);
         GroupLayout layout = new javax.swing.GroupLayout(Scorelabel);
         Scorelabel.setLayout(layout);
-        add(Scorelabel);
-         
-        
-//        background = new ImageIcon(getClass().getResource("/bg2.jpg"));     
-//        bgLabel = new JLabel(background);     
-//        bgLabel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
-//        
-//        
-//        
-//        imagePanel = (JPanel) this.getContentPane();
-//        imagePanel.setOpaque(false);
-//        this.getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
-        
+        add(Scorelabel);     
         
         time.start();
 
 	}
 
-	private void spawnEnemy() {
+	private void spawnEnemy() {                //random the spawning enemy type
 		//System.out.println(enemyCnt);
 		if(enemyCnt<maxEnemy) {
 			Random ran = new Random();
@@ -167,14 +152,14 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 				allEnemy.add(new EnemyB(pos, 10));
 				enemyCnt++;
 			}
-			else if(type==2&&this.Score>=50) {
+			else if(type==2&&this.Score>=50) {                //this enemy only appear when the score>=50
 				allEnemy.add(new EnemyC(pos, 10));
 				enemyCnt++;
 			}
 		}
 	}
 	
-	private void spawnItem(int x, int y, int type) {
+	private void spawnItem(int x, int y, int type) {             //spawn the item
 		if(type==0) {
 			allItem.add(new ChangeBulletItem(x, y));
 		}
@@ -196,7 +181,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         	try {
 				i.draw(g);
 				if(i.shoot()) {
-					if(i.type==0) {
+					if(i.type==0) {                      //add enemy's bullets
 						enmyBullets.add(new EnemyABullet(i.x, i.y, -1, 1));
 						enmyBullets.add(new EnemyABullet(i.x, i.y, 0, 1));
 						enmyBullets.add(new EnemyABullet(i.x, i.y, 1, 1));
@@ -218,21 +203,21 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			catch (Exception e) {
 				break;
 			}
-        	for (Bullet j : myBullets) {
+        	for (Bullet j : myBullets) {           //test the collision between player's bullets and enemies
         		if(i.testHit(j.x, j.y)) {
-        			i.setHP(j.power);
+        			i.setHP(j.power);              //set the enemy's hp 
         			if(i.hp<=0) {
-        				this.setPower(1);
-        				this.setScore(i.point);
+        				this.setPower(1);          //add laserPower if enemy dies
+        				this.setScore(i.point);    //add score
         			}
         			j.remove = true;
-        			p = new PlaySound("EnemyDie.wav");
+        			p = new PlaySound("EnemyDie.wav");      //play enemy dying sound
         			//i.remove = true;
         		}
         	}
         }
         
-        for (Bullet j : myBullets) {
+        for (Bullet j : myBullets) {          //draw every player's bullet
 			try {
 				j.draw(g);
 			}
@@ -241,14 +226,14 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			}
 		}
         
-        for (Bullet j : enmyBullets) {
+        for (Bullet j : enmyBullets) {               
 			try {
 				if(!j.canRemove()) {
 					j.draw(g);
-					if(this.testHit(j.x, j.y)&&playerHP>0) {
+					if(this.testHit(j.x, j.y)&&playerHP>0) {           //test the collision between enemy's bullets and the player
 	        			this.setHP(j.power);
-	        			p = new PlaySound("playerGotHit.wav");
-	        			j.remove = true;
+	        			p = new PlaySound("playerGotHit.wav");         //play the sound effect
+	        			j.remove = true;                               //remove the bullet
 	        		}
 				}
 			}
@@ -261,16 +246,16 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			try {
 				if(!j.canRemove()) {
 					j.draw(g);
-					if(this.testHit(j.x, j.y)) {
+					if(this.testHit(j.x, j.y)) {                //test if the player gets the item
 						if(j.type==0) {
-							p = new PlaySound("getItem1.wav");
-							this.myBulletType = 1;
+							p = new PlaySound("getItem1.wav");   //sound effect
+							this.myBulletType = 1;               //change plsyer's bullet type
 						}
 						else if(j.type==1) {
-							p = new PlaySound("getItem2.wav");
-							this.setHP(-10);
+							p = new PlaySound("getItem2.wav");   //sound effect
+							this.setHP(-10);                     //add player's hp
 						}
-	        			j.remove = true;
+	        			j.remove = true;                        //remove the item
 	        		}
 				}
 			}
@@ -281,20 +266,20 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         
         for(int j = allEnemy.size()-1; j >=0 ; j--) {
         	if(canShootLaser)
-        		System.out.printf("%f %d\n", playerPosX, allEnemy.get(j).x);
+        		System.out.printf("%f %d\n", playerPosX, allEnemy.get(j).x);          //test of the enemy is in the laser range
         	if(allEnemy.get(j).canRemove()||(canShootLaser&&((int)playerPosX-3<=allEnemy.get(j).x)&&((int)playerPosX+3>=allEnemy.get(j).x))) {
         		
         		if((canShootLaser&&((int)playerPosX-3<=allEnemy.get(j).x)&&((int)playerPosX+3>=allEnemy.get(j).x))){
-        			p = new PlaySound("EnemyDie.wav");
+        			p = new PlaySound("EnemyDie.wav");            //sound effect
         		}
 
         		Random ran = new Random();
         		int range = ran.nextInt(100);
         		
-        		if(range>=80) {
+        		if(range>=90) {                      //the probability of the recovery item is 10%
         			spawnItem(allEnemy.get(j).x, allEnemy.get(j).y, 0);
         		}
-        		else if(range<=30) {
+        		else if(range<=20) {                 //the probability of the recovery item is 20%
         			spawnItem(allEnemy.get(j).x, allEnemy.get(j).y, 1);
         		}
         		
@@ -303,15 +288,8 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         	}
         }
 
-//        for(Enemy i: allEnemy) {
-//        	if(i.canRemove()) allEnemy.remove(i);
-//        }
         
-//        for (Bullet j : myBullets) {
-//        	if(j.canRemove()) myBullets.remove(j);
-//        }
-        
-        for(int j = myBullets.size()-1; j >=0 ; j--) {
+        for(int j = myBullets.size()-1; j >=0 ; j--) {               //remove every objects which should be removed
         	if(myBullets.get(j).canRemove()) {
         		myBullets.remove(j);
         		
@@ -331,36 +309,34 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
         		
         	}
         }
-//        for (Bullet k : enmyBullets) {
-//        	if(k.canRemove()) enmyBullets.remove(k);
-//        }
+
         
-        drawHPBar(g);
+        drawHPBar(g); 
         drawPowerBar(g);
         drawPlayer(g);
     }
 
-    private void setHP(int delta) {
+    private void setHP(int delta) {                                //delta>0 => decrease hp, otherwise increase hp
 		// TODO Auto-generated method stub
 		this.playerHP-=delta;
-		if(this.playerHP>this.maxHP) this.playerHP = this.maxHP;
-		checkDie();
+		if(this.playerHP>this.maxHP) this.playerHP = this.maxHP;  //hp cannot exceeds the limit    
+		checkDie();                                               //check if the player dies
 	}
     
-    private void setPower(int delta) {
+    private void setPower(int delta) {                            //add the laser power
 		// TODO Auto-generated method stub
 		laserPower+=delta;
-		if(laserPower>maxlaserPower) laserPower = maxlaserPower;
+		if(laserPower>maxlaserPower) laserPower = maxlaserPower;  //power cannot exceeds the limit         
 	}
 
-    private void setScore(int delta) {
+    private void setScore(int delta) {                            //add the score
     	this.Score+=delta;
     	Scorelabel.setText("Score: "+this.Score);
     	setMaxEnemy();
     }
     
     private int threshold = 15;
-    private void setMaxEnemy() {
+    private void setMaxEnemy() {                                  //the enemy's maximum number is proportional to the score
     	if(this.Score>=threshold) {
     		this.maxEnemy++;
     		threshold*=2;
@@ -369,7 +345,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     
 	private boolean checkDie() {
 		// TODO Auto-generated method stub
-		if(this.playerHP<=0) {
+		if(this.playerHP<=0) {                //if player's dead, it's not able to move
 			canMove = false;
 			up = false;
 			down = false;
@@ -377,41 +353,40 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			right = false;
 			toShoot = false;
 			
-			
 			return true;
 		}
 		return false;
 	}
 	
-	private void drawHPBar(Graphics g) {
+	private void drawHPBar(Graphics g) {        //draw hp bar
 		int k = 100/this.maxHP;
 		g.setColor(Color.RED);
 		g.drawRect(400, 30, 100, 10);
 		g.fillRect(400, 30, this.playerHP*k>=0?this.playerHP>this.maxHP?this.maxHP*k:this.playerHP*k:0, 10);
 	}
 	
-	private void drawPowerBar(Graphics g) {
+	private void drawPowerBar(Graphics g) {      //draw power bar
 		int k = 90/maxlaserPower;
 		g.setColor(Color.YELLOW);
 		g.drawRect(400, 50, 90, 10);
 		g.fillRect(400, 50, laserPower*k, 10);
 	}
 
-	int explosionCnt = 0;
-	int shootPeriod = 5, shootCnt = 0;
-	int laserCnt = 0, laserPeriod = 140;
+	int explosionCnt = 0;                 //explosion animation counter
+	int shootPeriod = 5, shootCnt = 0;    //the period between shooting two times
+	int laserCnt = 0, laserPeriod = 140;  //laser period counter
 	private void drawPlayer(Graphics g) {
 		
-    	playerPosY = (playerPosY-(up?playerSpeedY:0)+(down?playerSpeedY:0));
-    	if(playerPosY<=0) playerPosY = 1;
+    	playerPosY = (playerPosY-(up?playerSpeedY:0)+(down?playerSpeedY:0)); 
+    	if(playerPosY<=0) playerPosY = 1;                                          //check if the player is in the range
     	if(playerPosY>=730) playerPosY = 729;
     	
     	playerPosX = (playerPosX-(left?playerSpeedX:0)+(right?playerSpeedX:0));
-    	if(playerPosX<=0) playerPosX = 1;
+    	if(playerPosX<=0) playerPosX = 1;                                           //check if the player is in the range
     	if(playerPosX>=500) playerPosX = 499;
     	//System.out.printf("%f %f\n", playerPosX, playerPosY);
     	
-    	if(toShoot) {
+    	if(toShoot) {                          
     		if(shootCnt>=shootPeriod) {
     			this.Shoot();
     			shootCnt%=shootPeriod;
@@ -428,23 +403,17 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     		laserCnt = 0;
     		canShootLaser = false;
     	}
-    	
-//    	if(checkDie()) {
-//    		g.drawImage(gameoverimg, 50, 260, gameoverimg.getWidth()/2, gameoverimg.getHeight()/2, this);
-//    		float alpha = 0f;
-//    		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
-//    		((Graphics2D) g).setComposite(ac);
-//    	}
+
     	
     	if(checkDie()) {
-    		if(gameover) {
+    		if(gameover) {           //draw gameover image
     			g.drawImage(gameoverimg, 50, 260, gameoverimg.getWidth()/2, gameoverimg.getHeight()/2, this);
     		}
-    		float alpha = 0f;
+    		float alpha = 0f;               //set the opacity of the player
     		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
     		((Graphics2D) g).setComposite(ac);
     		
-    		if(!explosionAnim) {
+    		if(!explosionAnim) {            //draw explosion animation
     			alpha = 1f;
         		ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
         		((Graphics2D) g).setComposite(ac);
@@ -456,22 +425,12 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     	
     	g.drawImage(fighterImage, (int)playerPosX, (int)playerPosY, (int)fighterImage.getWidth()/10, (int)fighterImage.getHeight()/10, this);
     	
-//    	if(checkDie()&&!explosionAnim) {
-//    		float alpha = 1f;
-//    		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
-//    		((Graphics2D) g).setComposite(ac);
-//    		g.drawImage(bg.get(explosionCnt/2), (int)playerPosX, (int)playerPosY, (int)bg.get(explosionCnt/2).getWidth()/2, (int)bg.get(explosionCnt/2).getHeight()/2, this);
-//    		explosionCnt++;
-//    	}    
     	
-    	if(explosionCnt==1) p = new PlaySound("explosion.wav");
+    	if(explosionCnt==1) p = new PlaySound("explosion.wav");        //play explosion sound effect
     	
-    	if(explosionCnt==24)
+    	if(explosionCnt==24)                                           //already play the animation
     		explosionAnim = true;
-		    
-    	
-    	
-    	
+
     	AffineTransform originalTransform = ((Graphics2D) g).getTransform();
     	
     	((Graphics2D) g).setTransform(originalTransform);
@@ -480,7 +439,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
     }
 	
 	boolean up = false, down = false, left = false, right = false, toShoot = false;;
-	public void keyPressed(KeyEvent e) {
+	public void keyPressed(KeyEvent e) {            //get the key
 		int key = e.getKeyCode();
 		//System.out.println(e);
 		
@@ -504,27 +463,19 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 			if( key == KeyEvent.VK_Z )
 				ShootLaser();
 		}
-		else {
-//			gameover = false;
-//			scoreboardPanel = new JPanel();
-//			scoreboardPanel.setBackground(Color.WHITE);
-//			scoreboardPanel.setSize(350, 600);
-//			scoreboardPanel.setLocation(100, 100);
-//
-//			add(scoreboardPanel);
-			
+		else {                    //if gameover and press any key, go to the scoreboard scene
+
 			new ScoreboardScene(Score);
-			frame.setVisible(false);
+			frame.setVisible(false);            //close this frame
 			frame.dispose();
 			
 		}
-		//checkPosRange();
-		//repaint();
+
 	}
 	
-	void Shoot() {
+	void Shoot() {                  //player's shooting method
 		PlaySound p = new PlaySound("shoot.wav");
-		if(myBulletType==0)
+		if(myBulletType==0)                                                     //different types of bullets
 			myBullets.add(new NormalBullet(playerPosX+15, playerPosY, 0, 1));
 		else if(myBulletType==1) {
 			myBullets.add(new NormalBullet(playerPosX+15, playerPosY, 0, 1));
@@ -533,7 +484,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		}
 	}
 	
-	public boolean testHit(double tx, double ty) {
+	public boolean testHit(double tx, double ty) {                            //test if the player got hit
 		return new Ellipse2D.Double(playerPosX-imgw/2, playerPosY-imgh/2, imgh, imgw).contains(tx, ty);
 	}
   
@@ -546,7 +497,7 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased(KeyEvent e) {           
 
 		int key = e.getKeyCode();
 		if( key == KeyEvent.VK_UP ) {
@@ -568,12 +519,12 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		
 	}
 
-	private void ShootLaser() {
+	private void ShootLaser() {                 //player can shoot laser only if the power is maximum
 		// TODO Auto-generated method stub
 		if(laserPower==maxlaserPower) {
 			canShootLaser = true;
 			laserPower = 0;
-			p = new PlaySound("LaserShoot.wav");
+			p = new PlaySound("LaserShoot.wav");  //laser sound effect
 		}
 	}
 

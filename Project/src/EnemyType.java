@@ -11,10 +11,10 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.text.View;
 
+//different types of enemies
 class EnemyA extends Enemy {
 
-	
-	EnemyA(int x, int y){
+	EnemyA(int x, int y){                
 		this.point = 3;
 		this.type = 0;
 		this.remove = false;
@@ -59,9 +59,6 @@ class EnemyA extends Enemy {
 		hit = false;
 	}
 	
-	public void update (List fb, List eb, List bo, int px, int py) {
-		
-	}
 	
 	public boolean testHit (double tx, double ty) {
 		return new Ellipse2D.Double(x-imgw/2, y-imgh/2, imgw, imgh).contains(tx, ty);
@@ -124,11 +121,6 @@ class EnemyB extends Enemy{
 		return false;
 	}
 
-	@Override
-	public void update(List fb, List eb, List bo, int px, int py) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public boolean testHit(double tx, double ty) {
@@ -193,11 +185,6 @@ class EnemyC extends Enemy{
 		return false;
 	}
 
-	@Override
-	public void update(List fb, List eb, List bo, int px, int py) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public boolean testHit(double tx, double ty) {

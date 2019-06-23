@@ -7,6 +7,8 @@ import java.awt.image.ImageObserver;
 import javax.imageio.ImageIO;
 import javax.swing.text.View;
 
+
+//different types of items
 class ChangeBulletItem extends Item {
 	
 	ChangeBulletItem(int x, int y){
@@ -31,15 +33,6 @@ class ChangeBulletItem extends Item {
 		
 	}
 	
-//	public boolean canRemove () {
-//		if(x<=0||x>=PlayerController.SCREEN_WIDTH||remove) {
-//			return true;
-//		}
-//		if(y<=0||y>=PlayerController.SCREEN_HEIGHT) {
-//			return true;
-//		}
-//		return false;
-//	}
 
 }
 
@@ -67,14 +60,5 @@ class RecoverItem extends Item {
 		
 	}
 	
-	public boolean canRemove () {
-		if(x<=0||x>=PlayerController.SCREEN_WIDTH||remove) {
-			return true;
-		}
-		if(y<=0||y>=PlayerController.SCREEN_HEIGHT) {
-			return true;
-		}
-		return false;
-	}
 
 }

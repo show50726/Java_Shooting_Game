@@ -19,20 +19,19 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+//Scoreboard Scene
 public class ScoreboardScene extends JFrame {
 	int myScore;
-	int[] ScoreRank = new int[5];
-	String filename = "score.txt";
+	int[] ScoreRank = new int[5];           //Save the top 5 scores
+	String filename = "score.txt";          //file of the score
 	//JFrame frame;
 	private JPanel contentPane;
 	
-    ScoreboardScene(){
-
-    }
     
     ScoreboardScene(int score){
     	myScore = score;
-    	checkScoreboard();
+    	checkScoreboard();            
+    	//Scoreboard Frame
     	setFont(new Font("Bahnschrift", Font.BOLD, 16));
 		setTitle("Scoreboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,8 +64,8 @@ public class ScoreboardScene extends JFrame {
 		line_2.setBounds(79, 395, 364, 23);
 		contentPane.add(line_2);
 		
-		JLabel score_1 = new JLabel(Integer.toString(ScoreRank[4]));
-		score_1.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel score_1 = new JLabel(Integer.toString(ScoreRank[4]));    //fill different score to the scoreboard from greatest to least 
+		score_1.setHorizontalAlignment(SwingConstants.CENTER); 
 		score_1.setForeground(Color.WHITE);
 		score_1.setFont(new Font("Algerian", Font.PLAIN, 22));
 		score_1.setBounds(201, 186, 129, 39);
@@ -235,18 +234,18 @@ public class ScoreboardScene extends JFrame {
     
     
     public void checkScoreboard() {
-    	File ScoreFile = new File(filename);
-    	if(!ScoreFile.exists()){
+    	File ScoreFile = new File(filename);          
+    	if(!ScoreFile.exists()){         //if the score.txt doesn't exist, create one
     		try {
 				ScoreFile.createNewFile();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    		ScoreRank[0] = myScore;
+    		ScoreRank[0] = myScore;           //fill player's score into the score array
     	}
     	else {
-    		try (BufferedReader br = Files.newBufferedReader(Paths.get(filename))) {
+    		try (BufferedReader br = Files.newBufferedReader(Paths.get(filename))) {  //if the file already exists, read the content
 
                 // read line by line
                 String line;
@@ -255,20 +254,20 @@ public class ScoreboardScene extends JFrame {
                     ScoreRank[i++] = Integer.parseInt(line);
                     System.out.println(i+ScoreRank[i-1]);
                 }
-                if(myScore>ScoreRank[4]) {
+                if(myScore>ScoreRank[4]) {        //if the player's score is greater than 5th score, replace it
                 	ScoreRank[4] = myScore;
                 }
-                Arrays.sort(ScoreRank);
+                Arrays.sort(ScoreRank);       //sort the scores
 
             } catch (IOException e) {
                 System.err.format("IOException: %s%n", e);
             }
     		
     	}
-    	writeScore();
+    	writeScore();         
     }
     
-    public void writeScore() {
+    public void writeScore() {         //write the scores into the scores.txt
     	PrintWriter writer;
 		try {
 			writer = new PrintWriter(filename);
@@ -279,7 +278,7 @@ public class ScoreboardScene extends JFrame {
 	    		writer.println(ScoreRank[i--]);
 	    	}
 	    	
-			setCanvas();
+			//setCanvas();
 	    	writer.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

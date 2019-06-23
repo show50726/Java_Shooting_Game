@@ -4,12 +4,12 @@ import java.awt.Image;
 import java.awt.List;
 
 abstract public class Item {
-	public int x, y, type;
+	public int x, y, type;           //position and the type index of the item
 	public boolean remove = false;
-	public int imgh, imgw;
-	Image image;
+	public int imgh, imgw;              //width and height of the item
+	Image image;                      //image of the item
 	
-	public boolean canRemove () {
+	public boolean canRemove () {               //remove if out of range or gets eaten by the player
 		if(x<=0||x>=PlayerController.SCREEN_WIDTH||remove) {
 			return true;
 		}

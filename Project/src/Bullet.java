@@ -3,20 +3,18 @@ import java.awt.Graphics;
 import java.awt.List;
 
 
-abstract class Bullet {
-	public float x, y;
-	public int dirX, dirY;
-	public int power = 0, dimension = 5, speed = 1;
+abstract class Bullet {              
+	public float x, y;                   //position of the bullet
+	public int dirX, dirY;                 //flying direction
+	public int power = 0, speed = 1;           
 	public boolean hit = false, remove = false;
 	public Color bullet_color = Color.WHITE;
 	
-	public boolean canRemove () {
+	public boolean canRemove () {              //if remove==true or canRemove==true => remove the bullet
 		return hit;
-		
 	}
 	
-	public boolean testHit (double x, double y) { return false; }
+	public boolean testHit (double x, double y) { return false; }              //test collision
 	
 	abstract public void draw (Graphics g);
-	abstract public void update (List fb, List eb, List bo, int px, int py);
 }

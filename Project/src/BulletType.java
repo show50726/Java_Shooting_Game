@@ -3,7 +3,8 @@ import java.awt.Graphics;
 import java.awt.List;
 import java.awt.event.ActionEvent;
 
-class NormalBullet extends Bullet {
+//different kinds of bullets
+class NormalBullet extends Bullet {                 //player's bullet
 	int radius = 8;
 	public NormalBullet(float nx, float ny, int dx, int dy) {
 		this.dirX = dx;
@@ -38,11 +39,6 @@ class NormalBullet extends Bullet {
 
 	}
 
-	@Override
-	public void update(List fb, List eb, List bo, int px, int py) {
-		// TODO Auto-generated method stub
-		y-=speed;
-	}
 
 }
 
@@ -82,10 +78,6 @@ class EnemyABullet extends Bullet {
 		g.fillOval((int)x,(int)y,radius,radius);
 	}
 
-	@Override
-	public void update(List fb, List eb, List bo, int px, int py) {
-
-	}
 
 }
 
@@ -123,11 +115,6 @@ class EnemyBBullet extends Bullet {
 
 
 		g.fillOval((int)x,(int)y,radius,radius);
-	}
-
-	@Override
-	public void update(List fb, List eb, List bo, int px, int py) {
-
 	}
 
 }
@@ -168,9 +155,5 @@ class EnemyCBullet extends Bullet {
 		g.fillOval((int)x,(int)y,radius,radius);
 	}
 
-	@Override
-	public void update(List fb, List eb, List bo, int px, int py) {
-
-	}
 
 }
