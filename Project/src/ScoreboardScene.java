@@ -30,7 +30,7 @@ public class ScoreboardScene extends JFrame {
     
     ScoreboardScene(int score){
     	myScore = score;
-    	checkScoreboard();            
+    	checkScoreboard();      
     	//Scoreboard Frame
     	setFont(new Font("Bahnschrift", Font.BOLD, 16));
 		setTitle("Scoreboard");
@@ -40,6 +40,7 @@ public class ScoreboardScene extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setResizable(false);
 		setLocationRelativeTo(null);
 		setVisible(true);
 		

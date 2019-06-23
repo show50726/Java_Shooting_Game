@@ -40,12 +40,14 @@ public class Main extends JFrame {
 		setFont(new Font("Bahnschrift", Font.BOLD, 16));
 		setTitle("Start");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(PlayerController.SCREEN_WIDTH, PlayerController.SCREEN_HEIGHT-51);
+		setSize(PlayerController.SCREEN_WIDTH, PlayerController.SCREEN_HEIGHT-65);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
 		setLocationRelativeTo(null);
+		setResizable(false);
 		setVisible(true);
 		
 		JLabel GameStart2 = new JLabel("");
