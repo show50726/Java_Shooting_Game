@@ -67,7 +67,7 @@ public class Main extends JFrame {
 		
 		JLabel GameStart = new JLabel("");
 		GameStart.setHorizontalAlignment(SwingConstants.CENTER);
-		GameStart.setIcon(new ImageIcon(Main.class.getResource("/images/圖片1.png")));
+		GameStart.setIcon(new ImageIcon(Main.class.getResource("/images/1.png")));
 		GameStart.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -118,7 +118,7 @@ public class Main extends JFrame {
 		
 		JLabel backgroundImg = new JLabel("");
 		backgroundImg.setBounds(-375, -113, 1560, 925);
-		backgroundImg.setIcon(new ImageIcon(Main.class.getResource("/images/圖片12.png")));
+		backgroundImg.setIcon(new ImageIcon(Main.class.getResource("/images/12.png")));
 		contentPane.add(backgroundImg);
 	}
 }

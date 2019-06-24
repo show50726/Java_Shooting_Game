@@ -56,12 +56,12 @@ public class ScoreboardScene extends JFrame {
 		contentPane.add(title);
 		
 		JLabel line = new JLabel("New label");
-		line.setIcon(new ImageIcon(ScoreboardScene.class.getResource("/images/分隔線.png")));
+		line.setIcon(new ImageIcon(ScoreboardScene.class.getResource("/images/line.png")));
 		line.setBounds(79, 174, 364, 23);
 		contentPane.add(line);
 		
 		JLabel line_2 = new JLabel("");
-		line_2.setIcon(new ImageIcon(ScoreboardScene.class.getResource("/images/分隔線.png")));
+		line_2.setIcon(new ImageIcon(ScoreboardScene.class.getResource("/images/line.png")));
 		line_2.setBounds(79, 395, 364, 23);
 		contentPane.add(line_2);
 		
@@ -150,12 +150,12 @@ public class ScoreboardScene extends JFrame {
 		contentPane.add(lblMyScore);
 		
 		JLabel line3 = new JLabel("");
-		line3.setIcon(new ImageIcon(ScoreboardScene.class.getResource("/images/分隔線.png")));
+		line3.setIcon(new ImageIcon(ScoreboardScene.class.getResource("/images/line.png")));
 		line3.setBounds(83, 547, 364, 23);
 		contentPane.add(line3);
 		
 		JLabel line4 = new JLabel("");
-		line4.setIcon(new ImageIcon(ScoreboardScene.class.getResource("/images/分隔線.png")));
+		line4.setIcon(new ImageIcon(ScoreboardScene.class.getResource("/images/line.png")));
 		line4.setBounds(83, 509, 364, 23);
 		contentPane.add(line4);
 		
@@ -211,7 +211,7 @@ public class ScoreboardScene extends JFrame {
 		
 		JLabel GameStart = new JLabel("");
 		GameStart.setHorizontalAlignment(SwingConstants.CENTER);
-		GameStart.setIcon(new ImageIcon(Main.class.getResource("/images/圖片1.png")));
+		GameStart.setIcon(new ImageIcon(Main.class.getResource("/images/1.png")));
 		GameStart.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -229,7 +229,7 @@ public class ScoreboardScene extends JFrame {
 		
 		JLabel backgroundImg = new JLabel("");
 		backgroundImg.setBounds(-235, -70, 1560, 925);
-		backgroundImg.setIcon(new ImageIcon(ScoreboardScene.class.getResource("/images/圖片3.png")));
+		backgroundImg.setIcon(new ImageIcon(ScoreboardScene.class.getResource("/images/3.png")));
 		contentPane.add(backgroundImg);
 	}
     
