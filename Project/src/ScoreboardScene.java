@@ -253,7 +253,7 @@ public class ScoreboardScene extends JFrame {
                 int i = 0;
                 while ((line = br.readLine()) != null) {
                     ScoreRank[i++] = Integer.parseInt(line);
-                    System.out.println(i+ScoreRank[i-1]);
+                    //System.out.println(i+ScoreRank[i-1]);
                 }
                 if(myScore>ScoreRank[4]) {        //if the player's score is greater than 5th score, replace it
                 	ScoreRank[4] = myScore;

@@ -265,8 +265,8 @@ public class PlayerController extends JPanel implements KeyListener, ActionListe
 		}
         
         for(int j = allEnemy.size()-1; j >=0 ; j--) {
-        	if(canShootLaser)
-        		System.out.printf("%f %d\n", playerPosX, allEnemy.get(j).x);          //test of the enemy is in the laser range
+//        	if(canShootLaser)
+//        		System.out.printf("%f %d\n", playerPosX, allEnemy.get(j).x);          //test of the enemy is in the laser range
         	if(allEnemy.get(j).canRemove()||(canShootLaser&&((int)playerPosX-3<=allEnemy.get(j).x)&&((int)playerPosX+3>=allEnemy.get(j).x))) {
         		
         		if((canShootLaser&&((int)playerPosX-3<=allEnemy.get(j).x)&&((int)playerPosX+3>=allEnemy.get(j).x))){
